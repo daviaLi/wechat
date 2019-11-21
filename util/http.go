@@ -16,7 +16,7 @@ import (
 )
 
 // TimeOut 全局请求超时设置,默认1分钟
-var TimeOut time.Duration = 60 * time.Second
+var TimeOut time.Duration = 15 * time.Second
 
 // SetTimeOut 设置全局请求超时
 func SetTimeOut(d time.Duration) {

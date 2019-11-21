@@ -14,7 +14,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/esap/wechat/util"
+	"github.com/daviaLi/wechat/util"
 )
 
 // WXAPI 订阅号，服务号，小程序接口，相关接口常量统一以此开头
@@ -52,6 +52,7 @@ type WxConfig struct {
 	AppName              string
 	AppType              int                                  // 0-公众号,小程序; 1-企业微信
 	ExternalTokenHandler func(string, ...string) *AccessToken // 外部token获取函数
+	MsgSenderCount int
 }
 
 // Server 微信服务容器
@@ -101,6 +102,10 @@ func New(wc *WxConfig) *Server {
 		ExternalTokenHandler: wc.ExternalTokenHandler,
 	}
 
+	if wc.MsgSenderCount == 0 {
+		wc.MsgSenderCount = 10
+	}
+
 	switch wc.AppType {
 	case 1:
 		s.RootUrl = CorpAPI
@@ -138,15 +143,17 @@ func New(wc *WxConfig) *Server {
 	}
 
 	s.MsgQueue = make(chan interface{}, 1000)
-	go func() {
-		for {
-			msg := <-s.MsgQueue
-			e := s.SendMsg(msg)
-			if e.ErrCode != 0 {
-				log.Println("MsgSend err:", e.ErrMsg)
+	for i := 0; i < wc.MsgSenderCount; i++ {
+		go func() {
+			for {
+				msg := <-s.MsgQueue
+				e := s.SendMsg(msg)
+				if e.ErrCode != 0 {
+					log.Println("MsgSend err:", e.ErrMsg)
+				}
 			}
-		}
-	}()
+		}()
+	}
 
 	return s
 }

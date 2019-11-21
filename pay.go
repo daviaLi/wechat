@@ -6,7 +6,7 @@ import (
 
 	"time"
 
-	"github.com/esap/wechat/util"
+	"github.com/daviaLi/wechat/util"
 )
 
 // PayRoot 支付根URL

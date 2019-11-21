@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/esap/wechat/util"
+	"github.com/daviaLi/wechat/util"
 )
 
 // FetchDelay 默认5分钟同步一次
@@ -53,19 +53,27 @@ func (s *Server) getAccessToken() (err error) {
 		Printf("***%v[%v]远程获取token:%v", util.Substr(s.AppId, 14, 30), s.AgentId, s.accessToken)
 		return
 	}
-	url := fmt.Sprintf(s.TokenUrl, s.AppId, s.Secret)
-	at := new(AccessToken)
-	if err = util.GetJson(url, at); err != nil {
+	var at *AccessToken
+	at, err = s.forceFetchAccessToken()
+	if err != nil {
 		return
 	}
+	s.accessToken = at
+	return
+}
+
+func (s *Server) forceFetchAccessToken() (*AccessToken, error) {
+	url := fmt.Sprintf(s.TokenUrl, s.AppId, s.Secret)
+	at := new(AccessToken)
+	if err := util.GetJson(url, at); err != nil {
+		return nil, err
+	}
 	if at.ErrCode > 0 {
-		return at.Error()
+		return nil, at.Error()
 	}
 	at.ExpiresIn = time.Now().Unix() + at.ExpiresIn - 5
-	s.accessToken = at
-	Printf("***%v[%v]本地获取token:%v", util.Substr(s.AppId, 14, 30), s.AgentId, s.accessToken)
-	return
-
+	Printf("***%v[%v]本地获取token:%v", util.Substr(s.AppId, 14, 30), s.AgentId, at)
+	return at, nil
 }
 
 // Ticket JS-SDK

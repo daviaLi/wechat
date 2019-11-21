@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/esap/wechat/util"
+	"github.com/daviaLi/wechat/util"
 )
 
 // CorpAPIDeptList 企业微信部门列表接口

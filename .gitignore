@@ -26,3 +26,4 @@ _testmain.go
 *.out
 
 go.sum
+.idea

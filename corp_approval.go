@@ -3,7 +3,7 @@ package wechat
 import (
 	"log"
 
-	"github.com/esap/wechat/util"
+	"github.com/daviaLi/wechat/util"
 )
 
 const (

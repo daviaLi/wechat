@@ -3,7 +3,7 @@ package wechat_test
 import (
 	"net/http"
 
-	"github.com/esap/wechat" // 微信SDK包
+	"github.com/daviaLi/wechat" // 微信SDK包
 	// "github.com/labstack/echo"
 )
 

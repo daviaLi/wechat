@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/esap/wechat/util"
+	"github.com/daviaLi/wechat/util"
 )
 
 const (
